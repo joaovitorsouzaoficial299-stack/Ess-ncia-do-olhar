@@ -59,7 +59,6 @@ function renderSettings(){
   $("timePicker").appendChild(b);
  });
  $("timeList").innerHTML="";
- dc.hours.slice().sort().forEach(function(t){var chip=document.createElement("span");chip.className="time-chip";chip.textContent=t;var b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Remover "+t);b.textContent="×";b.onclick=function(){dc.hours=dc.hours.filter(function(x){return x!==t});renderSettings()};chip.appendChild(b);$("timeList").appendChild(chip)});
  $("blockedList").innerHTML="";
  cfg.blockedDates.slice().sort().forEach(function(d){var chip=document.createElement("span");chip.className="time-chip";chip.textContent=fmt(d);var b=document.createElement("button");b.type="button";b.textContent="×";b.setAttribute("aria-label","Desbloquear "+fmt(d));b.onclick=function(){cfg.blockedDates=cfg.blockedDates.filter(function(x){return x!==d});renderSettings()};chip.appendChild(b);$("blockedList").appendChild(chip)});
 }
