@@ -11,14 +11,13 @@ var shortNames=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 var activeDay=1;
 function times(){var a=[];for(var m=8*60;m<=18*60;m+=30)a.push(String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0"));return a}
 function defaultSchedule(){var s={};for(var d=0;d<7;d++)s[d]={enabled:d>=1&&d<=6,hours:(d>=1&&d<=6?times().filter(function(t){return t<"18:00"}):[])};return s}
-function defaults(){return {schedule:defaultSchedule(),blockedDates:[],services:JSON.parse(JSON.stringify(serviceDefaults))}}
+function defaults(){return {schedule:defaultSchedule(),services:JSON.parse(JSON.stringify(serviceDefaults))}}
 function readSettings(){
  var base=defaults();
  try{
   var saved=JSON.parse(localStorage.getItem(SETTINGS)||"{}");
   if(saved.schedule){base.schedule=saved.schedule;for(var d=0;d<7;d++){if(!base.schedule[d])base.schedule[d]={enabled:false,hours:[]};base.schedule[d].hours=Array.isArray(base.schedule[d].hours)?base.schedule[d].hours:[];base.schedule[d].enabled=!!base.schedule[d].enabled}}
   else if(saved.days){saved.days.forEach(function(d){base.schedule[d]={enabled:true,hours:times().filter(function(t){return t<"18:00"})}})}
-  base.blockedDates=saved.blockedDates||[];
   base.services=saved.services||base.services;
  }catch(e){}
  return base;
@@ -58,13 +57,9 @@ function renderSettings(){
   b.onclick=function(){var idx=dc.hours.indexOf(t);if(idx>-1)dc.hours.splice(idx,1);else dc.hours.push(t);dc.hours.sort();renderSettings()};
   $("timePicker").appendChild(b);
  });
- $("timeList").innerHTML="";
- $("blockedList").innerHTML="";
- cfg.blockedDates.slice().sort().forEach(function(d){var chip=document.createElement("span");chip.className="time-chip";chip.textContent=fmt(d);var b=document.createElement("button");b.type="button";b.textContent="×";b.setAttribute("aria-label","Desbloquear "+fmt(d));b.onclick=function(){cfg.blockedDates=cfg.blockedDates.filter(function(x){return x!==d});renderSettings()};chip.appendChild(b);$("blockedList").appendChild(chip)});
 }
 $("toggleDay").onclick=function(){var dc=dayCfg(activeDay);dc.enabled=!dc.enabled;if(dc.enabled&&!dc.hours.length)dc.hours=times().filter(function(t){return t<"18:00"});renderSettings()};
-$("blockBtn").onclick=function(){var d=$("blockDate").value;if(!d)return;if(cfg.blockedDates.indexOf(d)<0)cfg.blockedDates.push(d);cfg.blockedDates.sort();renderSettings();$("blockDate").value=""};
-$("saveSettings").onclick=function(){for(var d=0;d<7;d++){var dc=dayCfg(d);dc.hours=Array.from(new Set(dc.hours)).filter(function(t){return times().indexOf(t)>-1}).sort();if(!dc.enabled)dc.hours=[]}cfg.blockedDates=Array.from(new Set(cfg.blockedDates)).sort();persist();$("settingsMsg").textContent="Configurações salvas neste navegador.";setTimeout(function(){$("settingsMsg").textContent=""},3500)};
+$("saveSettings").onclick=function(){for(var d=0;d<7;d++){var dc=dayCfg(d);dc.hours=Array.from(new Set(dc.hours)).filter(function(t){return times().indexOf(t)>-1}).sort();if(!dc.enabled)dc.hours=[]}persist();$("settingsMsg").textContent="Configurações salvas neste navegador.";setTimeout(function(){$("settingsMsg").textContent=""},3500)};
 function renderServices(){
  var root=$("serviceEditor");root.innerHTML="";
  cfg.services.forEach(function(s){
@@ -85,10 +80,10 @@ function renderAppointments(){
  $("totalMonth").textContent=all.filter(function(b){return b.date&&b.date.slice(0,7)===month&&b.status!=="cancelled"}).length;
  $("totalAll").textContent=all.filter(function(b){return b.date>=today&&b.status!=="cancelled"}).length;
  var fdate=$("filterDate").value,status=$("filterStatus").value;
- var list=all.filter(function(b){if(fdate&&b.date!==fdate)return false;if(status==="active"&&(b.status==="cancelled"||b.date<today))return false;if(status==="cancelled"&&b.status!=="cancelled")return false;return true}).sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time)});
+ var list=all.filter(function(b){if(fdate&&b.date!==fdate)return false;if(status==="active"&&b.status==="completed")return false;if(status==="completed"&&b.status!=="completed")return false;return true}).sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time)});
  var root=$("appointmentList");root.innerHTML="";if(!list.length){root.innerHTML='<div class="empty">Nenhum agendamento encontrado para esse filtro.</div>';return}
- list.forEach(function(a){var item=document.createElement("div");item.className="appointment";var left=document.createElement("div");left.innerHTML="<strong>"+esc(fmt(a.date))+" às "+esc(a.time)+"</strong><p>"+esc(a.service)+"<br>Cliente: "+esc(a.name)+"<br>WhatsApp: "+esc(a.phone)+"<br>Endereço: "+esc(a.addr||"Não informado")+"<br><span class=\"status\">"+(a.status==="cancelled"?"Cancelado":"Pendente de confirmação")+"</span></p>";var actions=document.createElement("div");actions.className="appointment-actions";if(a.status!=="cancelled"){var cancel=document.createElement("button");cancel.className="admin-btn danger";cancel.textContent="Cancelar";cancel.onclick=function(){if(!confirm("Cancelar o agendamento de "+a.name+" em "+fmt(a.date)+" às "+a.time+"?"))return;var updated=bookings().map(function(x){if(x.id===a.id)x.status="cancelled";return x});saveBookings(updated);renderAppointments()};actions.appendChild(cancel)}item.appendChild(left);item.appendChild(actions);root.appendChild(item)});
+ list.forEach(function(a){var item=document.createElement("div");item.className="appointment";var left=document.createElement("div");left.innerHTML="<strong>"+esc(fmt(a.date))+" às "+esc(a.time)+"</strong><p>"+esc(a.service)+"<br>Cliente: "+esc(a.name)+"<br>WhatsApp: "+esc(a.phone)+"<br>Endereço: "+esc(a.addr||"Não informado")+"<br><span class=\"status\">"+(a.status==="cancelled"?"Cancelado":"Pendente de confirmação")+"</span></p>";var actions=document.createElement("div");actions.className="appointment-actions";if(a.status!=="completed"){var done=document.createElement("button");done.className="admin-btn primary";done.textContent="Serviço concluído";done.onclick=function(){if(!confirm("Marcar o atendimento de "+a.name+" em "+fmt(a.date)+" às "+a.time+" como concluído?"))return;var updated=bookings().map(function(x){if(x.id===a.id)x.status="completed";return x});saveBookings(updated);renderAppointments()};actions.appendChild(done)}item.appendChild(left);item.appendChild(actions);root.appendChild(item)});
 }
-$("export").onclick=function(){var all=bookings();var rows=[["Data","Horário","Serviço","Nome","WhatsApp","Endereço","Status"]].concat(all.map(function(a){return [a.date,a.time,a.service,a.name,a.phone,a.addr,a.status||"pending"]}));var csv=rows.map(function(row){return row.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(";")}).join("\r\n");var blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download="agendamentos-essencia-do-olhar.csv";link.click();URL.revokeObjectURL(url)};
+$("export").onclick=function(){var all=bookings();var rows=[["Data","Horário","Serviço","Cor da henna","Nome","WhatsApp","Status"]].concat(all.map(function(a){return [a.date,a.time,a.service,a.hennaColor||"",a.name,a.phone,a.status||"received"]}));var csv=rows.map(function(row){return row.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'}).join(";")}).join("\r\n");var blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download="agendamentos-essencia-do-olhar.csv";link.click();URL.revokeObjectURL(url)};
 var nav=document.getElementById("nav");window.addEventListener("scroll",function(){if(nav)nav.classList.toggle("s",window.scrollY>40)},{passive:true});
 })();
