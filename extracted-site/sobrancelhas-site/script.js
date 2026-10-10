@@ -30,19 +30,21 @@ function renderServices(){
  if(select){var previous=select.value;select.innerHTML="";services.forEach(function(s){var o=document.createElement("option");o.value=s.name+" — "+money(s.price);o.textContent=o.value;select.appendChild(o)});if(Array.from(select.options).some(function(o){return o.value===previous}))select.value=previous}
  if(cards){cards.innerHTML="";services.forEach(function(s,i){var card=document.createElement("div");card.className="card in"+(i===1?" d1":i===2?" d2":"");var h=document.createElement("h3");h.textContent=s.name;var p=document.createElement("p");p.textContent=s.description||"";var price=document.createElement("span");price.className="pr";price.textContent=money(s.price);var duration=document.createElement("small");duration.textContent=(Number(s.duration)||30)+" min";card.appendChild(h);card.appendChild(p);card.appendChild(price);card.appendChild(duration);cards.appendChild(card)})}
 }
-var sel=null;
+var sel=null,selectedHenna=null;
+var hennaOptions=[{name:"Castanho claro",color:"#9a6b45"},{name:"Castanho médio",color:"#70452f"},{name:"Castanho escuro",color:"#4b2c20"},{name:"Marrom intenso",color:"#382219"},{name:"Preto suave",color:"#211b18"}];
+function renderHenna(){var picker=$("hennaPicker"),root=$("hennaColors"),service=$("svc");if(!picker||!root||!service)return;var option=service.options[service.selectedIndex],needsHenna=/henna/i.test(option?option.textContent:"");picker.style.display=needsHenna?"block":"none";root.innerHTML="";if(!needsHenna){selectedHenna=null;$("hennaSelected").textContent="";return}hennaOptions.forEach(function(item){var button=document.createElement("button");button.type="button";button.className="henna-choice"+(selectedHenna===item.name?" chosen":"");button.setAttribute("aria-pressed",selectedHenna===item.name?"true":"false");var circle=document.createElement("span");circle.className="henna-circle";circle.style.backgroundColor=item.color;circle.textContent=item.name;var name=document.createElement("span");name.className="henna-name";name.textContent=item.name;button.appendChild(circle);button.appendChild(name);button.onclick=function(){selectedHenna=item.name;renderHenna()};root.appendChild(button)});$("hennaSelected").textContent=selectedHenna?"Cor escolhida: "+selectedHenna:"Escolha uma cor acima.";}
+if($("svc"))$("svc").addEventListener("change",renderHenna);
 window.addEventListener("scroll",function(){var nav=$("nav");if(nav)nav.classList.toggle("s",scrollY>40);var sparkleLayer=$("sp");if(sparkleLayer&&scrollY<window.innerHeight)sparkleLayer.style.translate="0 "+(scrollY*.045)+"px"},{passive:true});
 if($("yr"))$("yr").textContent=new Date().getFullYear();
 if($("sp")){for(var i=0;i<26;i++){var s=document.createElement("i");s.className="spark";s.style.cssText="left:"+Math.random()*100+"%;top:"+Math.random()*100+"%;animation-delay:"+Math.random()*4+"s;animation-duration:"+(3+Math.random()*3)+"s";$("sp").appendChild(s)}$("sp").style.cssText="position:absolute;inset:0;pointer-events:none"}
 if("IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.15});document.querySelectorAll(".rv").forEach(function(e){io.observe(e)})}else{document.querySelectorAll(".rv").forEach(function(e){e.classList.add("in")})}
-renderServices();
+renderServices();renderHenna();
 if($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",drawSlots);$("dt").addEventListener("input",drawSlots)}
 function drawSlots(){
  var date=$("dt").value;sel=null;
  if(!date){$("slots").innerHTML='<span class="hint">Selecione uma data para ver os horários disponíveis.</span>';return}
  var cfg=settings(),day=new Date(date+"T12:00:00").getDay(),dayCfg=(cfg.schedule||{})[day];
  if(!dayCfg||!dayCfg.enabled){$("slots").innerHTML='<span class="hint">Não há atendimento nesse dia. Escolha outra data.</span>';return}
- if((cfg.blockedDates||[]).indexOf(date)>-1){$("slots").innerHTML='<span class="hint">Essa data está bloqueada. Escolha outra.</span>';return}
  var taken=load().filter(function(b){return b.date===date&&b.status!=="cancelled"}).map(function(b){return b.time});
  var now=new Date(),isToday=date===iso(now),hours=(dayCfg.hours||[]).slice().sort();
  $("slots").innerHTML="";
@@ -59,13 +61,13 @@ function show(t,err){var m=$("msg");m.className="msg"+(err?" err":"");m.innerHTM
 function renderList(){var a=load().filter(function(b){return b.date>=iso(new Date())&&b.status!=="cancelled"}).sort(function(x,y){return (x.date+x.time)>(y.date+y.time)?1:-1});$("my").style.display=a.length?"block":"none";$("list").innerHTML="";a.forEach(function(b){var r=document.createElement("div");r.className="it";var t=document.createElement("span");t.textContent=fmt(b.date)+" às "+b.time+" — "+b.service.split(" — ")[0];r.appendChild(t);var c=document.createElement("button");c.textContent="Cancelar";c.onclick=function(){if(!confirm("Cancelar este agendamento neste navegador?"))return;save(load().filter(function(x){return x.id!==b.id}));renderList();drawSlots()};r.appendChild(c);$("list").appendChild(r)})}
 if($("go"))$("go").onclick=function(){
  var d=$("dt").value,n=$("nm").value.trim(),p=$("ph").value.replace(/\D/g,"");
- if(!d)return show("Escolha uma data.",1);if(!sel)return show("Escolha um horário disponível.",1);if(n.length<2)return show("Informe seu nome.",1);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",1);
+ if(!d)return show("Escolha uma data.",1);if(!sel)return show("Escolha um horário disponível.",1);if(/henna/i.test($("svc").value)&&!selectedHenna)return show("Escolha a cor da henna.",1);if(n.length<2)return show("Informe seu nome.",1);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",1);
  var cfg=settings(),weekday=new Date(d+"T12:00:00").getDay(),dc=(cfg.schedule||{})[weekday];
- if(!dc||!dc.enabled||(dc.hours||[]).indexOf(sel)<0||(cfg.blockedDates||[]).indexOf(d)>-1)return show("Esse dia ou horário não está disponível. Escolha outra opção.",1);
+ if(!dc||!dc.enabled||(dc.hours||[]).indexOf(sel)<0)return show("Esse dia ou horário não está disponível. Escolha outra opção.",1);
  var all=load();if(all.some(function(b){return b.date===d&&b.time===sel&&b.status!=="cancelled"}))return show("Esse horário acabou de ser ocupado. Escolha outro.",1);
- var b={id:Date.now().toString(),date:d,time:sel,service:$("svc").value,name:n,phone:p,status:"pending",createdAt:new Date().toISOString()};all.push(b);save(all);
- var txt="Olá! Gostaria de confirmar meu agendamento:%0A"+"• Serviço: "+encodeURIComponent(b.service)+"%0A• Data: "+fmt(d)+" às "+sel+"%0A• Nome: "+encodeURIComponent(n);
- show("✨ Agendamento registrado para <b>"+fmt(d)+" às "+sel+"</b>!<br><br>Envie a confirmação pelo WhatsApp para combinar o atendimento:<br><br><a class='btn fill' target='_blank' rel='noopener' href='https://wa.me/"+WHATS+"?text="+txt+"'>Confirmar no WhatsApp</a>");
+ var b={id:Date.now().toString(),date:d,time:sel,service:$("svc").value,name:n,phone:p,hennaColor:/henna/i.test($("svc").value)?selectedHenna:"",status:"received",createdAt:new Date().toISOString()};all.push(b);save(all);
+ var txt="Olá! Gostaria de confirmar meu agendamento:%0A"+"• Serviço: "+encodeURIComponent(b.service)+(b.hennaColor?"%0A• Cor da henna: "+encodeURIComponent(b.hennaColor):"")+"%0A• Data: "+fmt(d)+" às "+sel+"%0A• Nome: "+encodeURIComponent(n);
+ show("✨ Solicitação de agendamento registrada para <b>"+fmt(d)+" às "+sel+"</b>!<br><br>Envie a confirmação pelo WhatsApp para combinar o atendimento:<br><br><a class='btn fill' target='_blank' rel='noopener' href='https://wa.me/"+WHATS+"?text="+txt+"'>Confirmar no WhatsApp</a>");
  renderList();drawSlots();
 };
 if($("dt"))renderList();
