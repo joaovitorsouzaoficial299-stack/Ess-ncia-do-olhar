@@ -76,3 +76,15 @@ footer .script{font-size:2rem}
 .rv.in{opacity:1;transform:none}
 .d1{transition-delay:.15s}.d2{transition-delay:.3s}.d3{transition-delay:.45s}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+
+/* Seletor premium de tons de henna */
+.henna-picker{margin:24px 0 6px;padding:20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(214,178,122,.06),transparent)}
+.henna-picker>label{margin-top:0}
+.henna-colors{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:12px;margin-top:16px}
+.henna-choice{display:flex;flex-direction:column;align-items:center;gap:9px;padding:9px 5px;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--txt);font:inherit;cursor:pointer;transition:transform .25s,border-color .25s,background .25s}
+.henna-choice:hover,.henna-choice.chosen{border-color:var(--gold);background:rgba(214,178,122,.08);transform:translateY(-2px)}
+.henna-circle{width:76px;height:76px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;font-size:.62rem;line-height:1.2;color:#fff8ee;text-shadow:0 1px 4px rgba(0,0,0,.8);box-shadow:0 0 0 4px rgba(214,178,122,.08),inset 0 0 0 1px rgba(255,255,255,.16)}
+.henna-name{font-size:.72rem;color:var(--mut);text-align:center;line-height:1.4}
+.henna-choice.chosen .henna-name{color:var(--gold)}
+.henna-selected{margin-top:14px;color:var(--gold);font-size:.8rem;text-align:center}
