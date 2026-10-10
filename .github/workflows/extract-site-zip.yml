@@ -1,0 +1,53 @@
+name: Extract site ZIP
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "sobrancelhas-site.zip"
+      - ".github/workflows/extract-site-zip.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Extract ZIP into extracted-site
+        run: |
+          set -euo pipefail
+          ZIP_FILE="sobrancelhas-site.zip"
+          DEST="extracted-site"
+
+          if [ ! -f "$ZIP_FILE" ]; then
+            echo "Arquivo $ZIP_FILE não encontrado na raiz do repositório."
+            exit 1
+          fi
+
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+          unzip -q "$ZIP_FILE" -d "$DEST"
+
+          echo "Arquivos extraídos:"
+          find "$DEST" -maxdepth 4 -type f -print | sort
+
+          if ! find "$DEST" -type f -iname "index.html" -print -quit | grep -q .; then
+            echo "Aviso: nenhum index.html encontrado no ZIP."
+          fi
+
+      - name: Commit extracted files
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f extracted-site
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração nos arquivos extraídos."
+            exit 0
+          fi
+          git commit -m "Extract website ZIP into extracted-site"
+          git push
