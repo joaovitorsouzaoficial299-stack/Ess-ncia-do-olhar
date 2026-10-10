@@ -58,13 +58,13 @@ function drawSlots(){
 function show(t,err){var m=$("msg");m.className="msg"+(err?" err":"");m.innerHTML=t;m.style.display="block";m.scrollIntoView({behavior:"smooth",block:"center"})}
 function renderList(){var a=load().filter(function(b){return b.date>=iso(new Date())&&b.status!=="cancelled"}).sort(function(x,y){return (x.date+x.time)>(y.date+y.time)?1:-1});$("my").style.display=a.length?"block":"none";$("list").innerHTML="";a.forEach(function(b){var r=document.createElement("div");r.className="it";var t=document.createElement("span");t.textContent=fmt(b.date)+" às "+b.time+" — "+b.service.split(" — ")[0];r.appendChild(t);var c=document.createElement("button");c.textContent="Cancelar";c.onclick=function(){if(!confirm("Cancelar este agendamento neste navegador?"))return;save(load().filter(function(x){return x.id!==b.id}));renderList();drawSlots()};r.appendChild(c);$("list").appendChild(r)})}
 if($("go"))$("go").onclick=function(){
- var d=$("dt").value,n=$("nm").value.trim(),p=$("ph").value.replace(/\D/g,""),ad=$("ad").value.trim();
- if(!d)return show("Escolha uma data.",1);if(!sel)return show("Escolha um horário disponível.",1);if(n.length<2)return show("Informe seu nome.",1);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",1);if(ad.length<5)return show("Informe o endereço do atendimento.",1);
+ var d=$("dt").value,n=$("nm").value.trim(),p=$("ph").value.replace(/\D/g,"");
+ if(!d)return show("Escolha uma data.",1);if(!sel)return show("Escolha um horário disponível.",1);if(n.length<2)return show("Informe seu nome.",1);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",1);
  var cfg=settings(),weekday=new Date(d+"T12:00:00").getDay(),dc=(cfg.schedule||{})[weekday];
  if(!dc||!dc.enabled||(dc.hours||[]).indexOf(sel)<0||(cfg.blockedDates||[]).indexOf(d)>-1)return show("Esse dia ou horário não está disponível. Escolha outra opção.",1);
  var all=load();if(all.some(function(b){return b.date===d&&b.time===sel&&b.status!=="cancelled"}))return show("Esse horário acabou de ser ocupado. Escolha outro.",1);
- var b={id:Date.now().toString(),date:d,time:sel,service:$("svc").value,name:n,phone:p,addr:ad,status:"pending",createdAt:new Date().toISOString()};all.push(b);save(all);
- var txt="Olá! Gostaria de confirmar meu agendamento:%0A"+"• Serviço: "+encodeURIComponent(b.service)+"%0A• Data: "+fmt(d)+" às "+sel+"%0A• Nome: "+encodeURIComponent(n)+"%0A• Endereço: "+encodeURIComponent(ad);
+ var b={id:Date.now().toString(),date:d,time:sel,service:$("svc").value,name:n,phone:p,status:"pending",createdAt:new Date().toISOString()};all.push(b);save(all);
+ var txt="Olá! Gostaria de confirmar meu agendamento:%0A"+"• Serviço: "+encodeURIComponent(b.service)+"%0A• Data: "+fmt(d)+" às "+sel+"%0A• Nome: "+encodeURIComponent(n);
  show("✨ Agendamento registrado para <b>"+fmt(d)+" às "+sel+"</b>!<br><br>Envie a confirmação pelo WhatsApp para combinar o atendimento:<br><br><a class='btn fill' target='_blank' rel='noopener' href='https://wa.me/"+WHATS+"?text="+txt+"'>Confirmar no WhatsApp</a>");
  renderList();drawSlots();
 };
