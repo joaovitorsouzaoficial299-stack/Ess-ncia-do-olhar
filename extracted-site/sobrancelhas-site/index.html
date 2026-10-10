@@ -35,11 +35,7 @@
 <section id="servicos">
 <p class="tag rv">Serviços</p>
 <h2 class="rv">Escolha o seu cuidado</h2>
-<div class="grid">
-<div class="card rv"><h3>Design simples</h3><p>Mapeamento e retirada dos fios com acabamento delicado.</p><span class="pr">R$ 45</span><small>40 min</small></div>
-<div class="card rv d1"><h3>Design com henna</h3><p>Design personalizado com preenchimento em henna para mais definição.</p><span class="pr">R$ 70</span><small>60 min</small></div>
-<div class="card rv d2"><h3>Brow lamination</h3><p>Fios alinhados e volumosos com efeito natural e duradouro.</p><span class="pr">R$ 120</span><small>60 min</small></div>
-</div>
+<div class="grid" id="serviceCards"></div>
 </section>
 
 <section id="como">
@@ -57,7 +53,7 @@
 <h2 class="rv">Agende seu horário</h2>
 <div class="book rv">
 <label for="svc">Serviço</label>
-<select id="svc"><option>Design simples — R$ 45</option><option>Design com henna — R$ 70</option><option>Brow lamination — R$ 120</option></select>
+<select id="svc"></select>
 <label for="dt">Data</label>
 <input type="date" id="dt">
 <p class="hint" id="dh" style="margin-top:6px">Atendemos de segunda a sábado.</p>
