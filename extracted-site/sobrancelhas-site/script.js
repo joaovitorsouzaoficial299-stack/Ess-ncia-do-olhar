@@ -9,7 +9,13 @@ var $=function(i){return document.getElementById(i)};
 var sel=null;
 
 // nav + faíscas
-window.addEventListener("scroll",function(){$("nav").classList.toggle("s",scrollY>40)});
+window.addEventListener("scroll",function(){
+  $("nav").classList.toggle("s",scrollY>40);
+  var sparkleLayer=$("sp");
+  if(sparkleLayer && scrollY<window.innerHeight){
+    sparkleLayer.style.translate="0 "+(scrollY*.045)+"px";
+  }
+},{passive:true});
 $("yr").textContent=new Date().getFullYear();
 for(var i=0;i<26;i++){var s=document.createElement("i");s.className="spark";s.style.cssText="left:"+Math.random()*100+"%;top:"+Math.random()*100+"%;animation-delay:"+Math.random()*4+"s;animation-duration:"+(3+Math.random()*3)+"s";$("sp").appendChild(s)}
 $("sp").style.cssText="position:absolute;inset:0;pointer-events:none";
