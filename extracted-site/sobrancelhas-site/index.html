@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design de Sobrancelhas | Realce sua Beleza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav id="nav"><b class="gold">BELEZA</b><div><a href="#servicos">Serviços</a><a href="#como">Como funciona</a><a href="#agendar" class="cta">Agendar</a></div></nav>
+
+<header class="hero">
+<div class="glow"></div>
+<div id="sp"></div>
+<p class="script" style="font-size:1.4rem;margin-bottom:14px">realce seu olhar ♥</p>
+<span class="script rv">Design de</span>
+<h1 class="gold rv d1">SOBRANCELHAS</h1>
+<p class="l rv d2">Harmonia<i>•</i>Definição<i>•</i>Realce</p>
+<a href="#agendar" class="btn fill rv d3">Agende seu horário</a>
+<div class="scroll"></div>
+</header>
+
+<section>
+<p class="tag rv">Por que nos escolher</p>
+<h2 class="rv">Sua sobrancelha transforma o seu olhar</h2>
+<div class="grid">
+<div class="feat rv"><div class="ic"><svg viewBox="0 0 40 40"><path d="M5 22c8-10 22-12 30-4"/><path d="M8 28c8-5 18-6 24-2"/></svg></div><h3>Design personalizado</h3><p>Estudo do formato do seu rosto para o desenho ideal.</p></div>
+<div class="feat rv d1"><div class="ic"><svg viewBox="0 0 40 40"><path d="M4 22c8-9 24-9 32 0-8 9-24 9-32 0z"/><circle cx="20" cy="22" r="4"/></svg></div><h3>Realce da beleza natural</h3><p>Valorizamos o que você já tem, sem exageros.</p></div>
+<div class="feat rv d2"><div class="ic"><svg viewBox="0 0 40 40"><path d="M16 6c1 8 3 10 10 11-7 1-9 3-10 11-1-8-3-10-10-11 7-1 9-3 10-11z"/><path d="M30 22c.5 4 1.5 5 5 5.5-3.5.5-4.5 1.500-5 5.500-.5-4-1.500-5-5-5.500 3.500-.5 4.500-1.500 5-5.500z"/></svg></div><h3>Acabamento perfeito</h3><p>Precisão, simetria e cuidado em cada detalhe.</p></div>
+</div>
+</section>
+
+<section id="servicos">
+<p class="tag rv">Serviços</p>
+<h2 class="rv">Escolha o seu cuidado</h2>
+<div class="grid">
+<div class="card rv"><h3>Design simples</h3><p>Mapeamento e retirada dos fios com acabamento delicado.</p><span class="pr">R$ 45</span><small>40 min</small></div>
+<div class="card rv d1"><h3>Design com henna</h3><p>Design personalizado com preenchimento em henna para mais definição.</p><span class="pr">R$ 70</span><small>60 min</small></div>
+<div class="card rv d2"><h3>Brow lamination</h3><p>Fios alinhados e volumosos com efeito natural e duradouro.</p><span class="pr">R$ 120</span><small>60 min</small></div>
+</div>
+</section>
+
+<section id="como">
+<p class="tag rv">Como funciona</p>
+<h2 class="rv">Simples e sem complicação</h2>
+<div class="grid steps">
+<div class="step rv"><h3>Escolha</h3><p>Selecione o serviço desejado.</p></div>
+<div class="step rv d1"><h3>Agende</h3><p>Defina data e horário disponíveis.</p></div>
+<div class="step rv d2"><h3>Relaxe</h3><p>Atendimento domiciliar, com carinho e produtos de qualidade.</p></div>
+</div>
+</section>
+
+<section id="agendar">
+<p class="tag rv">Agendamento online</p>
+<h2 class="rv">Agende seu horário</h2>
+<div class="book rv">
+<label for="svc">Serviço</label>
+<select id="svc"><option>Design simples — R$ 45</option><option>Design com henna — R$ 70</option><option>Brow lamination — R$ 120</option></select>
+<label for="dt">Data</label>
+<input type="date" id="dt">
+<p class="hint" id="dh" style="margin-top:6px">Atendemos de segunda a sábado.</p>
+<label>Horário</label>
+<div class="slots" id="slots"><span class="hint">Selecione uma data.</span></div>
+<div class="row">
+<div><label for="nm">Seu nome</label><input id="nm" placeholder="Maria Silva" autocomplete="name"></div>
+<div><label for="ph">WhatsApp</label><input id="ph" type="tel" placeholder="(11) 99999-9999" autocomplete="tel"></div>
+</div>
+<label for="ad">Endereço (atendimento domiciliar)</label>
+<input id="ad" placeholder="Rua, número, bairro" autocomplete="street-address">
+<div style="text-align:center;margin-top:30px"><button class="btn fill" id="go">Confirmar agendamento</button></div>
+<div class="msg" id="msg"></div>
+<div class="my" id="my" style="display:none"><h3>Meus agendamentos</h3><div id="list"></div></div>
+</div>
+</section>
+
+<footer>
+<div class="script">Sua sobrancelha transforma o seu olhar ♥</div>
+Atendimento domiciliar • Produtos de qualidade • Atendimento com carinho<br>
+© <span id="yr"></span> Realce sua Beleza
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
