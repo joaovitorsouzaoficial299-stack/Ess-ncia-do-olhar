@@ -23,7 +23,8 @@ if($("sp")){for(var i=0;i<26;i++){var s=document.createElement("i");s.className=
 if("IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.15});document.querySelectorAll(".rv").forEach(function(e){io.observe(e)})}else{document.querySelectorAll(".rv").forEach(function(e){e.classList.add("in")})}
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmt(d){var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
-renderServices();\nif($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",drawSlots)}
+renderServices();
+if($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",drawSlots)}
 function drawSlots(){
   var d=$("dt").value;sel=null;if(!d){$("slots").innerHTML='<span class="hint">Selecione uma data.</span>';return}
   var cfg=settings(),dd=new Date(d+"T12:00:00");
