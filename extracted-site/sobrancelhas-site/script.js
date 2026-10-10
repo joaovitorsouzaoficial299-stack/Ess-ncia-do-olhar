@@ -1,10 +1,17 @@
 // Essência do Olhar — agendamento local no navegador
 var WHATS="5511999999999"; // Trocar pelo WhatsApp real da profissional
-var DEFAULT_SETTINGS={hours:["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"],days:[1,2,3,4,5,6],blockedDates:[]};
+var DEFAULT_SETTINGS={hours:["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00"],days:[1,2,3,4,5,6],blockedDates:[],services:[{id:"design",name:"Design simples",description:"Mapeamento e retirada dos fios com acabamento delicado.",price:45,duration:40},{id:"henna",name:"Design com henna",description:"Design personalizado com preenchimento em henna para mais definição.",price:70,duration:60},{id:"lamination",name:"Brow lamination",description:"Fios alinhados e volumosos com efeito natural e duradouro.",price:120,duration:60}]};
 var KEY="brow_bookings_v1",SETTINGS_KEY="brow_settings_v1";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
 function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
 function settings(){try{return Object.assign({},DEFAULT_SETTINGS,JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}"))}catch(e){return DEFAULT_SETTINGS}}
+function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:2})}
+function renderServices(){
+ var cfg=settings(),services=cfg.services||DEFAULT_SETTINGS.services,select=$("svc"),cards=$("serviceCards");
+ if(select){select.innerHTML="";services.forEach(function(s){var o=document.createElement("option");o.value=s.name+" — "+money(s.price);o.textContent=o.value;select.appendChild(o)})}
+ if(cards){cards.innerHTML="";services.forEach(function(s,i){var card=document.createElement("div");card.className="card in"+(i===1?" d1":i===2?" d2":"");var h=document.createElement("h3");h.textContent=s.name;var p=document.createElement("p");p.textContent=s.description||"";var price=document.createElement("span");price.className="pr";price.textContent=money(s.price);var duration=document.createElement("small");duration.textContent=(Number(s.duration)||30)+" min";card.appendChild(h);card.appendChild(p);card.appendChild(price);card.appendChild(duration);cards.appendChild(card)})}
+}
+
 var $=function(i){return document.getElementById(i)};
 var sel=null;
 window.addEventListener("scroll",function(){
@@ -16,7 +23,7 @@ if($("sp")){for(var i=0;i<26;i++){var s=document.createElement("i");s.className=
 if("IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.15});document.querySelectorAll(".rv").forEach(function(e){io.observe(e)})}else{document.querySelectorAll(".rv").forEach(function(e){e.classList.add("in")})}
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmt(d){var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
-if($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",drawSlots)}
+renderServices();\nif($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",drawSlots)}
 function drawSlots(){
   var d=$("dt").value;sel=null;if(!d){$("slots").innerHTML='<span class="hint">Selecione uma data.</span>';return}
   var cfg=settings(),dd=new Date(d+"T12:00:00");
