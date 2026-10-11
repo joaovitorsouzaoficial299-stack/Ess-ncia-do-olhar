@@ -89,3 +89,36 @@ footer .script{font-size:2rem}
 .henna-name{font-size:.72rem;color:var(--mut);text-align:center;line-height:1.4}
 .henna-choice.chosen .henna-name{color:var(--gold)}
 .henna-selected{margin-top:14px;color:var(--gold);font-size:.8rem;text-align:center}
+
+
+/* Agendamento em etapas: experiência premium dourada */
+#wizardBooking{scroll-margin-top:90px}
+.wizard-progress{margin:0 auto 34px;max-width:570px;padding:0 2px 25px;border-bottom:1px solid rgba(214,178,122,.15)}
+.wizard-progress-top{display:flex;justify-content:space-between;gap:12px;color:var(--gold);font-size:.65rem;letter-spacing:.2em;margin-bottom:12px}
+.wizard-track{height:3px;background:rgba(214,178,122,.15);border-radius:10px;overflow:hidden}
+.wizard-track span{display:block;width:33.333%;height:100%;background:linear-gradient(90deg,#8d6a3a,#f5dfb1,#c69a5b);box-shadow:0 0 15px rgba(214,178,122,.65);transition:width .65s cubic-bezier(.2,.7,.2,1)}
+.wizard-steps{display:flex;justify-content:space-between;margin-top:19px;gap:10px}
+.wizard-dot{display:flex;align-items:center;gap:9px;color:#766452;transition:color .35s}
+.wizard-dot b{width:34px;height:34px;display:grid;place-items:center;border:1px solid rgba(214,178,122,.25);border-radius:50%;font-size:.67rem;font-weight:400;transition:all .35s}
+.wizard-dot small{font-size:.68rem;letter-spacing:.08em}
+.wizard-dot.active,.wizard-dot.done{color:var(--gold)}
+.wizard-dot.active b,.wizard-dot.done b{border-color:var(--gold);color:#1a1006;background:linear-gradient(135deg,#f3dfb4,#b88d52);box-shadow:0 0 20px rgba(214,178,122,.22)}
+.wizard-panel{animation:wizardIn .48s cubic-bezier(.2,.7,.2,1) both}
+.wizard-panel[hidden]{display:none}
+@keyframes wizardIn{from{opacity:0;transform:translateY(16px);filter:blur(3px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.wizard-kicker{color:var(--gold);font-size:.63rem;letter-spacing:.28em;margin:0 0 8px}
+.wizard-title{font-size:clamp(1.8rem,5vw,2.5rem);color:var(--txt);margin:0 0 7px}
+.wizard-copy{color:var(--mut);font-size:.85rem;line-height:1.7;margin-bottom:22px}
+.wizard-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:30px}
+.wizard-next-only{justify-content:flex-end}
+.wizard-actions .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 22px}
+.wizard-back{border-color:rgba(214,178,122,.35);color:var(--mut)}
+.wizard-next,.wizard-actions #go{position:relative;overflow:hidden}
+.wizard-next:after,.wizard-actions #go:after{content:"";position:absolute;inset:-50% auto -50% -35%;width:24%;transform:rotate(22deg);background:rgba(255,255,255,.38);filter:blur(7px);animation:goldSweep 3.6s ease-in-out infinite}
+@keyframes goldSweep{0%,20%{left:-35%}65%,100%{left:125%}}
+.wizard-summary{display:grid;gap:7px;padding:17px 18px;margin:20px 0 8px;border:1px solid rgba(214,178,122,.35);border-radius:14px;background:linear-gradient(120deg,rgba(214,178,122,.09),rgba(214,178,122,.015));color:var(--txt);font-size:.82rem;line-height:1.6}
+.wizard-summary strong{color:var(--gold);font-weight:500}
+.wizard-summary .summary-label{color:var(--mut);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase}
+.wizard-panel .slots{margin-top:10px}
+@media(max-width:560px){.wizard-dot{gap:6px;flex-direction:column}.wizard-dot small{font-size:.6rem}.wizard-dot b{width:31px;height:31px}.wizard-actions{gap:9px}.wizard-actions .btn{padding:13px 14px;font-size:.65rem;letter-spacing:.12em;flex:1}.wizard-title{font-size:1.9rem}.wizard-progress{margin-bottom:28px}}
+@media(prefers-reduced-motion:reduce){.wizard-panel{animation:none}.wizard-track span,.wizard-dot b{transition:none}.wizard-next:after,.wizard-actions #go:after{animation:none}}
