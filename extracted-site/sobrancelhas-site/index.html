@@ -51,20 +51,30 @@
 <section id="agendar">
 <p class="tag rv">Agendamento online</p>
 <h2 class="rv">Agende seu horário</h2>
-<div class="book rv">
-<label for="svc">Serviço</label>
-<select id="svc"></select>
-<div id="hennaPicker" class="henna-picker" style="display:none"><label>Escolha a cor da henna</label><p class="hint">Selecione o tom que combina melhor com você.</p><div id="hennaColors" class="henna-colors"></div><p id="hennaSelected" class="henna-selected">Escolha uma cor acima.</p></div>
-<label for="dt">Data</label>
-<input type="date" id="dt">
-<p class="hint" id="dh" style="margin-top:6px">Atendemos de segunda a sábado.</p>
-<label>Horário</label>
-<div class="slots" id="slots"><span class="hint">Selecione uma data.</span></div>
-<div class="row">
-<div><label for="nm">Seu nome</label><input id="nm" placeholder="Maria Silva" autocomplete="name"></div>
-<div><label for="ph">WhatsApp</label><input id="ph" type="tel" placeholder="(11) 99999-9999" autocomplete="tel"></div>
+<div class="book rv" id="bookingWizard">
+<div class="wizard-progress" aria-label="Progresso do agendamento">
+<div class="wizard-progress-top"><span id="stepLabel">ETAPA 01 DE 03</span><span id="stepPercent">33%</span></div>
+<div class="wizard-track"><span id="stepBar"></span></div>
+<div class="wizard-steps"><span class="wizard-dot active" data-step-dot="1"><b>01</b><small>Serviço</small></span><span class="wizard-dot" data-step-dot="2"><b>02</b><small>Horário</small></span><span class="wizard-dot" data-step-dot="3"><b>03</b><small>Seus dados</small></span></div>
 </div>
-<div style="text-align:center;margin-top:30px"><button class="btn fill" id="go">Confirmar agendamento</button></div>
+<div class="wizard-panel active" data-wizard-step="1">
+<p class="wizard-kicker">✦ PRIMEIRO PASSO</p><h3 class="wizard-title">Escolha seu cuidado</h3><p class="wizard-copy">Vamos encontrar o serviço perfeito para realçar seu olhar.</p>
+<label for="svc">Serviço</label><select id="svc"></select>
+<div id="hennaPicker" class="henna-picker" style="display:none"><label>Escolha a cor da henna</label><p class="hint">Selecione o tom que combina melhor com você.</p><div id="hennaColors" class="henna-colors"></div><p id="hennaSelected" class="henna-selected">Escolha uma cor acima.</p></div>
+<div class="wizard-actions wizard-next-only"><button type="button" class="btn fill wizard-next" data-next="2">Continuar <span aria-hidden="true">↗</span></button></div>
+</div>
+<div class="wizard-panel" data-wizard-step="2" hidden>
+<p class="wizard-kicker">✦ SEGUNDO PASSO</p><h3 class="wizard-title">Seu momento de beleza</h3><p class="wizard-copy">Escolha a data e um dos horários disponíveis.</p>
+<label for="dt">Data</label><input type="date" id="dt"><p class="hint" id="dh" style="margin-top:6px">Atendemos de segunda a sábado.</p>
+<label>Horário</label><div class="slots" id="slots"><span class="hint">Selecione uma data.</span></div>
+<div class="wizard-actions"><button type="button" class="btn wizard-back" data-back="1">Voltar</button><button type="button" class="btn fill wizard-next" data-next="3">Continuar <span aria-hidden="true">↗</span></button></div>
+</div>
+<div class="wizard-panel" data-wizard-step="3" hidden>
+<p class="wizard-kicker">✦ ÚLTIMO PASSO</p><h3 class="wizard-title">Vamos confirmar?</h3><p class="wizard-copy">Só precisamos dos seus dados para preparar seu atendimento.</p>
+<div class="wizard-summary" id="bookingSummary"><span>Seu agendamento aparecerá aqui.</span></div>
+<div class="row"><div><label for="nm">Seu nome</label><input id="nm" placeholder="Maria Silva" autocomplete="name"></div><div><label for="ph">WhatsApp</label><input id="ph" type="tel" placeholder="(11) 99999-9999" autocomplete="tel"></div></div>
+<div class="wizard-actions"><button type="button" class="btn wizard-back" data-back="2">Voltar</button><button class="btn fill" id="go">Confirmar agendamento <span aria-hidden="true">✦</span></button></div>
+</div>
 <div class="msg" id="msg"></div>
 <div class="my" id="my" style="display:none"><h3>Meus agendamentos</h3><div id="list"></div></div>
 </div>
