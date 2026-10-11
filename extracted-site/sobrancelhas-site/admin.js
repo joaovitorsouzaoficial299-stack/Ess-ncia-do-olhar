@@ -53,7 +53,7 @@ $("signupBtn").onclick=createAdmin;
 $("password").addEventListener("keydown",function(e){if(e.key==="Enter")authenticate()});
 $("logout").onclick=async function(){await db.auth.signOut();showLogin();$("password").value="";message("Você saiu do painel.",false)};
 db.auth.getSession().then(async function(r){if(r.data&&r.data.session){var u=r.data.session.user;if(isAdmin(u))await openDashboard(u);else{await db.auth.signOut();showLogin()}}}).catch(function(){showLogin()});
-db.auth.onAuthStateChange(function(event,session){if(event==="SIGNED_OUT")showLogin();if(session&&!isAdmin(session.user))db.auth.signOut()});
+db.auth.onAuthStateChange(function(event,session){if(event==="SIGNED_OUT")showLogin();if(session&&!isAdmin(session.user)){Promise.resolve().then(function(){db.auth.signOut()})}});
 async function loadData(){
  try{
   var results=await Promise.all([
