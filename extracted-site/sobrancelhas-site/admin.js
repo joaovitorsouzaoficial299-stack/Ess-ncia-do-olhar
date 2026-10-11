@@ -76,9 +76,9 @@ $("saveServices").onclick=function(){cfg.services=cfg.services.filter(function(s
 $("clearFilters").onclick=function(){$("filterDate").value="";$("filterStatus").value="active";renderAppointments()};
 function renderAppointments(){
  var all=bookings(),today=iso(new Date()),month=today.slice(0,7);
- $("totalToday").textContent=all.filter(function(b){return b.date===today&&b.status!=="cancelled"}).length;
- $("totalMonth").textContent=all.filter(function(b){return b.date&&b.date.slice(0,7)===month&&b.status!=="cancelled"}).length;
- $("totalAll").textContent=all.filter(function(b){return b.date>=today&&b.status!=="cancelled"}).length;
+ $("totalToday").textContent=all.filter(function(b){return b.date===today&&b.status!=="cancelled"&&b.status!=="completed"}).length;
+ $("totalMonth").textContent=all.filter(function(b){return b.date&&b.date.slice(0,7)===month&&b.status!=="cancelled"&&b.status!=="completed"}).length;
+ $("totalAll").textContent=all.filter(function(b){return b.date>=today&&b.status!=="cancelled"&&b.status!=="completed"}).length;
  var fdate=$("filterDate").value,status=$("filterStatus").value;
  var list=all.filter(function(b){if(fdate&&b.date!==fdate)return false;if(status==="active"&&b.status==="completed")return false;if(status==="completed"&&b.status!=="completed")return false;return true}).sort(function(a,b){return (a.date+a.time).localeCompare(b.date+b.time)});
  var root=$("appointmentList");root.innerHTML="";if(!list.length){root.innerHTML='<div class="empty">Nenhum agendamento encontrado para esse filtro.</div>';return}
