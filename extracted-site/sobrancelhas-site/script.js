@@ -1,5 +1,5 @@
 // Essência do Olhar — agendamento local no navegador
-var WHATS="5511999999999"; // Trocar pelo WhatsApp real da profissional
+var WHATS="5562993150343"; // WhatsApp de agendamento da profissional
 var KEY="brow_bookings_v1",SETTINGS_KEY="brow_settings_v1";
 var serviceDefaults=[
 {id:"design",name:"Design simples",description:"Mapeamento e retirada dos fios com acabamento delicado.",price:45,duration:40},
@@ -65,7 +65,7 @@ function drawSlots(){
  if(!hours.length)$("slots").innerHTML='<span class="hint">Ainda não há horários liberados para esse dia. Entre em contato para consultar disponibilidade.</span>';
 }
 function show(t,err){var m=$("msg");m.className="msg"+(err?" err":"");m.innerHTML=t;m.style.display="block";m.scrollIntoView({behavior:"smooth",block:"center"})}
-function renderList(){var a=load().filter(function(b){return b.date>=iso(new Date())&&b.status!=="cancelled"}).sort(function(x,y){return (x.date+x.time)>(y.date+y.time)?1:-1});$("my").style.display=a.length?"block":"none";$("list").innerHTML="";a.forEach(function(b){var r=document.createElement("div");r.className="it";var t=document.createElement("span");t.textContent=fmt(b.date)+" às "+b.time+" — "+b.service.split(" — ")[0];r.appendChild(t);var c=document.createElement("button");c.textContent="Cancelar";c.onclick=function(){if(!confirm("Cancelar este agendamento neste navegador?"))return;save(load().filter(function(x){return x.id!==b.id}));renderList();drawSlots()};r.appendChild(c);$("list").appendChild(r)})}
+function renderList(){var a=load().filter(function(b){return b.date>=iso(new Date())&&b.status!=="cancelled"}).sort(function(x,y){return (x.date+x.time)>(y.date+y.time)?1:-1});$("my").style.display=a.length?"block":"none";$("list").innerHTML="";a.forEach(function(b){var r=document.createElement("div");r.className="it";var t=document.createElement("span");t.textContent=fmt(b.date)+" às "+b.time+" — "+b.service.split(" — ")[0];r.appendChild(t);var c=document.createElement("button");c.textContent="Cancelar";c.onclick=function(){if(!confirm("Deseja cancelar este agendamento? Ele ficará registrado como cancelado."))return;var updated=load().map(function(x){if(x.id===b.id){x.status="cancelled";x.cancelledAt=new Date().toISOString()}return x});save(updated);renderList();drawSlots()};r.appendChild(c);$("list").appendChild(r)})}
 if($("go"))$("go").onclick=function(){
  var d=$("dt").value,n=$("nm").value.trim(),p=$("ph").value.replace(/\D/g,"");
  if(!d)return show("Escolha uma data.",1);if(!sel)return show("Escolha um horário disponível.",1);if(/henna/i.test($("svc").value)&&!selectedHenna)return show("Escolha a cor da henna.",1);if(n.length<2)return show("Informe seu nome.",1);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",1);
