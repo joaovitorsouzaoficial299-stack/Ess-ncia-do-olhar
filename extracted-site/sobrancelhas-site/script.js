@@ -90,15 +90,15 @@ document.querySelectorAll("[data-back]").forEach(function(button){button.addEven
 if($("svc"))$("svc").addEventListener("change",function(){renderHenna();updateWizardSummary();if($("dt").value)drawSlots()});
 if($("dt")){$("dt").min=iso(new Date());$("dt").addEventListener("change",function(){drawSlots();updateWizardSummary()});$("dt").addEventListener("input",drawSlots)}
 if($("go"))$("go").onclick=async function(){
- var d=$("dt").value,n=$("nm").value.trim(),p=$("ph").value.replace(/\D/g,""),service=selectedService();
- if(!d)return show("Escolha uma data.",true);if(!sel)return show("Escolha um horário disponível.",true);if(!service)return show("Escolha um serviço.",true);if(/henna/i.test(service.name)&&!selectedHenna)return show("Escolha a cor da henna.",true);if(n.length<2)return show("Informe seu nome.",true);if(p.length<10)return show("Informe um WhatsApp válido com DDD.",true);
+ var d=$("dt").value,n=$("nm").value.trim(),service=selectedService();
+ if(!d)return show("Escolha uma data.",true);if(!sel)return show("Escolha um horário disponível.",true);if(!service)return show("Escolha um serviço.",true);if(/henna/i.test(service.name)&&!selectedHenna)return show("Escolha a cor da henna.",true);if(n.length<2)return show("Informe seu nome.",true);
  var dayCfg=(cfg.schedule||{})[new Date(d+"T12:00:00").getDay()];
  if(!dayCfg||!dayCfg.enabled||(dayCfg.hours||[]).indexOf(sel)<0||(cfg.blockedDates||[]).indexOf(d)>-1)return show("Esse dia ou horário não está disponível. Escolha outra opção.",true);
  var button=$("go");button.disabled=true;
  try{
-  var res=await db.rpc("create_booking",{p_customer_name:n,p_whatsapp:p,p_service_id:service.id,p_booking_date:d,p_booking_time:sel,p_henna_color:/henna/i.test(service.name)?selectedHenna:null});
+  var res=await db.rpc("create_booking",{p_customer_name:n,p_whatsapp:"",p_service_id:service.id,p_booking_date:d,p_booking_time:sel,p_henna_color:/henna/i.test(service.name)?selectedHenna:null});
   if(res.error)throw res.error;var data=res.data;if(Array.isArray(data))data=data[0];if(!data||!data.id||!data.cancellation_token)throw new Error("Não foi possível confirmar o agendamento.");
-  var b={id:data.id,token:data.cancellation_token,date:d,time:sel,service:service.name,name:n,phone:p,hennaColor:/henna/i.test(service.name)?selectedHenna:"",status:"scheduled",createdAt:new Date().toISOString()};
+  var b={id:data.id,token:data.cancellation_token,date:d,time:sel,service:service.name,name:n,hennaColor:/henna/i.test(service.name)?selectedHenna:"",status:"scheduled",createdAt:new Date().toISOString()};
   var all=localBookings();all.push(b);saveLocalBookings(all);
   var txt="Olá! Gostaria de confirmar meu agendamento:%0A• Serviço: "+encodeURIComponent(service.name)+"%0A• Valor: "+encodeURIComponent(money(service.price))+(b.hennaColor?"%0A• Cor da henna: "+encodeURIComponent(b.hennaColor):"")+"%0A• Data: "+fmt(d)+" às "+sel+"%0A• Nome: "+encodeURIComponent(n);
   show("✨ Seu agendamento foi registrado!<br><br><strong>"+fmt(d)+" às "+sel+"</strong><br><br>Envie a mensagem pelo WhatsApp para combinar o atendimento:<br><br><a class='btn fill' target='_blank' rel='noopener' href='https://wa.me/"+WHATS+"?text="+txt+"'>Confirmar no WhatsApp</a>");
