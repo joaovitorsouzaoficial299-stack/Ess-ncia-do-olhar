@@ -16,12 +16,13 @@
 <main class="admin-wrap">
 <div id="login" class="panel" style="max-width:480px;margin:0 auto">
 <p class="tag" style="text-align:left">Área restrita</p><h1 style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;margin:8px 0">Painel administrativo</h1>
-<p class="sub" id="loginHelp">Crie um PIN para acessar este painel neste navegador.</p>
-<label for="pin">PIN administrativo</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Digite seu PIN">
-<div style="margin-top:18px"><button id="loginBtn" class="admin-btn primary">Entrar</button></div><p class="sub" id="loginMsg" style="margin-top:14px"></p>
+<p class="sub" id="loginHelp">Entre com o único e-mail administrativo autorizado. O acesso é verificado pelo Supabase.</p>
+<label for="email">E-mail do administrador</label><input id="email" type="email" autocomplete="username" placeholder="E-mail autorizado" value="gisellesouzaoficial299@gmail.com">
+<label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Sua senha (mínimo 8 caracteres)">
+<div class="inline" style="margin-top:18px"><button id="loginBtn" class="admin-btn primary">Entrar</button><button id="signupBtn" type="button" class="admin-btn">Criar primeiro acesso</button></div><p class="sub" id="loginMsg" style="margin-top:14px" aria-live="polite"></p>
 </div>
 <div id="dashboard" style="display:none">
-<div class="admin-head"><div><p class="tag" style="text-align:left">Essência do Olhar</p><h1>Painel administrativo</h1><p class="sub">Gerencie os horários e consulte os agendamentos salvos neste navegador.</p></div><button id="logout" class="admin-btn">Sair</button></div>
+<div class="admin-head"><div><p class="tag" style="text-align:left">Essência do Olhar</p><h1>Painel administrativo</h1><p class="sub">Gerencie horários, serviços e agendamentos sincronizados com segurança. Acesso: <span id="adminIdentity"></span>.</p></div><button id="logout" class="admin-btn">Sair</button></div>
 <div class="stat-row"><div class="stat"><b id="totalToday">0</b><span>Agendamentos hoje</span></div><div class="stat"><b id="totalMonth">0</b><span>Agendamentos no mês</span></div><div class="stat"><b id="totalAll">0</b><span>Agendamentos futuros</span></div></div>
 <section class="panel" id="servicesPanel"><h2>Serviços e valores</h2><p class="sub">Edite os serviços, descrições, preços e duração. As alterações aparecem no site de agendamento neste mesmo navegador.</p><div id="serviceEditor"></div><div class="inline" style="margin-top:14px"><button id="addService" class="admin-btn">+ Adicionar serviço</button><button id="saveServices" class="admin-btn primary">Salvar serviços</button><span id="serviceMsg" class="sub"></span></div></section><section class="panel" id="config">
 <h2>Configurar atendimento</h2><p class="sub">Escolha os dias da semana e os horários que aparecerão no agendamento do site.</p>
@@ -29,12 +30,13 @@
 <div style="margin-top:18px"><button id="saveSettings" class="admin-btn primary">Salvar configurações</button><span id="settingsMsg" class="sub" style="margin-left:12px"></span></div>
 </section>
 <section class="panel" id="agendamentos">
-<h2>Agendamentos</h2><div class="filters"><div><label for="filterDate">Data</label><input id="filterDate" type="date"></div><div><label for="filterStatus">Situação</label><select id="filterStatus"><option value="active">Agendamentos em aberto</option><option value="all">Todos</option><option value="completed">Serviços concluídos</option></select></div><button id="clearFilters" class="admin-btn">Limpar filtros</button></div>
+<h2>Agendamentos</h2><div class="filters"><div><label for="filterDate">Data</label><input id="filterDate" type="date"></div><div><label for="filterStatus">Situação</label><select id="filterStatus"><option value="active">Agendamentos em aberto</option><option value="all">Todos</option><option value="completed">Serviços concluídos</option><option value="cancelled">Cancelados pelo cliente</option></select></div><button id="clearFilters" class="admin-btn">Limpar filtros</button></div>
 <div id="appointmentList" style="margin-top:20px"></div>
 </section>
 <section class="panel"><button id="export" class="admin-btn">Exportar agendamentos (CSV)</button></section>
 </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="admin.js"></script>
 </body>
 </html>
